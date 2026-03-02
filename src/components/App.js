@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Text, Box, useApp, useInput } from "ink";
 import Banner from "./Banner.js";
 import PinnedChats from "./PinnedChats.js";
+import BrowseChats from "./BrowseChats.js";
 import ChatView from "./ChatView.js";
 import * as tg from "../telegram.js";
 
 const h = React.createElement;
 
 export default function App() {
-    const { exit } = useApp();
+    const app = useApp();
     const [screen, setScreen] = useState("loading");
     const [phone, setPhone] = useState("");
     const [pinnedChats, setPinnedChats] = useState([]);
@@ -50,7 +51,7 @@ export default function App() {
 
                 const pinned = await tg.getPinnedChats();
                 setPinnedChats(pinned);
-                setScreen("menu");
+                setScreen(pinned.length > 0 ? "menu" : "browse");
             } catch (err) {
                 setError(err.message);
             }
@@ -102,7 +103,7 @@ export default function App() {
                 case "/exit":
                 case "/quit":
                     await tg.disconnect();
-                    exit();
+                    app.exit();
                     break;
             }
         } catch (err) {
@@ -113,7 +114,9 @@ export default function App() {
     // ─── Ctrl+C / q to quit from non-chat screens ───────────────────
     useInput((input, key) => {
         if (input === "q" && screen !== "chat") {
-            tg.disconnect().then(() => exit());
+            tg.disconnect().then(() => {
+                app.exit();
+            });
         }
     }, { isActive: screen !== "chat" });
 
@@ -138,7 +141,7 @@ export default function App() {
                     onSelect: openChat,
                     onBrowse: () => setScreen("browse")
                 })
-                : h(Text, { color: "gray" }, "  No pinned chats. Type /chats to browse.")
+                : null
         );
     }
 
@@ -153,9 +156,17 @@ export default function App() {
         });
     }
 
-    // browse mode
-    return h(Box, { flexDirection: "column" },
-        h(Banner, { phone }),
-        h(Text, { color: "gray" }, "  Type /chats to list conversations, /open <name> to enter a chat, q to quit.")
-    );
+    if (screen === "browse") {
+        return h(Box, { flexDirection: "column" },
+            h(Banner, { phone }),
+            h(BrowseChats, {
+                onSelect: openChat,
+                onBack: () => {
+                    if (pinnedChats.length > 0) setScreen("menu");
+                }
+            })
+        );
+    }
+
+    return null;
 }

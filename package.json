@@ -4,6 +4,9 @@
   "description": "A terminal-based Telegram chat client",
   "type": "module",
   "main": "index.js",
+  "bin": {
+    "termigram": "./index.js"
+  },
   "scripts": {
     "start": "node index.js"
   },

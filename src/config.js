@@ -14,24 +14,11 @@ const ENV_PATH = resolve(__dirname, "..", ".env");
 export async function loadConfig() {
   dotenv.config({ path: ENV_PATH });
 
-  let apiId = process.env.API_ID;
-  let apiHash = process.env.API_HASH;
+  // Default Termigram Public API Keys
+  const apiId = 2040; // Default Telegram Desktop ID
+  const apiHash = "b18441a1ff607e10a989891a5462e627"; // Default Telegram Desktop Hash
+
   let sessionString = process.env.SESSION_STRING || "";
-
-  if (!apiId || !apiHash) {
-    console.log("\n🔑  First-time setup — you need a Telegram API ID and Hash.");
-    console.log("   Get them at: https://my.telegram.org/apps\n");
-
-    if (!apiId) {
-      apiId = await input.text("Enter your API ID:");
-    }
-    if (!apiHash) {
-      apiHash = await input.text("Enter your API Hash:");
-    }
-
-    // Persist to .env
-    saveEnv({ API_ID: apiId, API_HASH: apiHash, SESSION_STRING: sessionString });
-  }
 
   return {
     apiId: parseInt(apiId, 10),

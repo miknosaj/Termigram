@@ -30,15 +30,11 @@ export default function PinnedChats({ chats, onSelect, onBrowse }) {
             const isSelected = i === selected;
             const pointer = isSelected ? "  ❯ " : "    ";
             const label = item.title;
-            const sub = item.lastMessage
-                ? ` "${item.lastMessage.slice(0, 35)}${item.lastMessage.length > 35 ? "…" : ""}"`
-                : "";
 
             return h(Box, { key: i },
                 h(Text, { color: isSelected ? "#00b0ff" : undefined },
                     pointer,
-                    h(Text, { bold: true }, label),
-                    h(Text, { dimColor: true }, sub)
+                    h(Text, { bold: true }, label)
                 )
             );
         }),

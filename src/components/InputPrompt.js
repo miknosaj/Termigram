@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Text, Box, useInput, useStdout } from "ink";
+import TextInput from "ink-text-input";
 
 const h = React.createElement;
 
 function TypingDots() {
     const [frame, setFrame] = useState(0);
-    const frames = ["·  ", "·· ", "···"];
+    const frames = ["   ", ".  ", ".. ", "..."];
 
     useEffect(() => {
         const timer = setInterval(() => {
             setFrame(prev => (prev + 1) % frames.length);
-        }, 400);
+        }, 250);
         return () => clearInterval(timer);
     }, []);
 
-    return h(Text, { color: "#888888" }, " typing ", frames[frame]);
+    return h(Text, { color: "#888888" }, " typing", frames[frame]);
 }
 
 export default function InputPrompt({ onSubmit, onBack, chatTitle, isTyping }) {
@@ -28,52 +29,39 @@ export default function InputPrompt({ onSubmit, onBack, chatTitle, isTyping }) {
             if (onBack) onBack();
             return;
         }
-        if (key.return) {
-            if (value.trim()) {
-                onSubmit(value.trim());
-            }
-            setValue("");
-            return;
-        }
-        if (key.backspace || key.delete) {
-            setValue(prev => prev.slice(0, -1));
-            return;
-        }
-        if (key.ctrl || key.meta) return;
-        if (key.upArrow || key.downArrow || key.leftArrow || key.rightArrow) return;
-        if (key.tab) return;
-
-        if (input) {
-            setValue(prev => prev + input);
-        }
     });
 
     const color = chatTitle ? "#00b0ff" : "#1c64f2";
-    const placeholder = chatTitle
-        ? `Type your message to ${chatTitle}`
-        : "Type a command";
+    const nameColor = chatTitle ? "#66ccff" : "#1c64f2";
+    const placeholder = "Type your message";
 
     return h(Box, { flexDirection: "column" },
         // Fixed-height typing slot — always 1 line tall
         h(Box, { height: 1 },
             isTyping
                 ? h(TypingDots)
-                : h(Text, null, " ")
+                : h(Text, { color: nameColor, bold: true }, chatTitle ? `  ${chatTitle}` : "  ")
         ),
         // Top divider
-        h(Text, { color: "#444444" }, divider),
+        h(Text, { color: color }, divider),
         // Input row
         h(Box, null,
-            h(Text, { color }, " \u276f  "),
-            value
-                ? h(Text, null, value)
-                : h(Text, { color: "#555555" }, placeholder)
+            h(Text, { color }, " ❯ "),
+            h(TextInput, {
+                value,
+                onChange: setValue,
+                onSubmit: (val) => {
+                    if (val.trim()) onSubmit(val.trim());
+                    setValue("");
+                },
+                placeholder: value ? placeholder : ` ${placeholder}`
+            })
         ),
         // Bottom divider
-        h(Text, { color: "#444444" }, divider),
+        h(Text, { color: color }, divider),
         // Status bar
         chatTitle
-            ? h(Text, { color: "#555555" }, " esc back  \u00b7  /history  \u00b7  /quit")
+            ? h(Text, { color: "#555555" }, " esc back    /history    /quit")
             : null
     );
 }
