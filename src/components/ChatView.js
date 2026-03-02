@@ -60,9 +60,9 @@ function Message({ text, isSelf, contentWidth, replyTo, senderName, isGroup, sho
     const cleanText = stripMarkdown(text || "[media/unsupported]");
 
     // Indicator logic
-    let indicatorChar = isSelf ? "●" : "○";
+    let indicatorChar = isSelf ? "●" : "✦";
     let indicatorColor = isSelf ? "#00b0ff" : "white"; // Add Termigram blue to own messages
-    let pad = "   "; // Match the spatial padding of " ○ " or " ● "
+    let pad = "   "; // Match the spatial padding of " ✦ " or " ● "
 
     // Group "Script" string overrides
     if (isGroup) {
