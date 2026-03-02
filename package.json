@@ -1,5 +1,5 @@
 {
-  "name": "telegram-cli",
+  "name": "termigram",
   "version": "1.0.0",
   "description": "A terminal-based Telegram chat client",
   "type": "module",

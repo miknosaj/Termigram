@@ -77,7 +77,7 @@ export default function App() {
     const goBack = () => {
         setCurrentChat(null);
         setMessages([]);
-        process.stdout.write(`\x1b]0;Telegram CLI\x07`);
+        process.stdout.write(`\x1b]0;Termigram\x07`);
         setScreen("menu");
     };
 
