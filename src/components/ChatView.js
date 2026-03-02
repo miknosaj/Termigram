@@ -151,6 +151,6 @@ export default function ChatView({ title, messages, isTyping, isGroup, onSend, o
                 showIndicator
             });
         }),
-        h(InputPrompt, { onSubmit: handleSubmit, onBack, chatTitle: title, isTyping })
+        h(InputPrompt, { key: "input-prompt", onSubmit: handleSubmit, onBack, chatTitle: title, isTyping })
     );
 }
