@@ -31,8 +31,8 @@ export default function InputPrompt({ onSubmit, onBack, chatTitle, isTyping }) {
         }
     });
 
-    const color = chatTitle ? "#00b0ff" : "#1c64f2";
-    const nameColor = chatTitle ? "#66ccff" : "#1c64f2";
+    const color = "#00b0ff";
+    const nameColor = chatTitle ? "#888888" : "#00b0ff";
     const placeholder = "Type your message";
 
     return h(Box, { flexDirection: "column" },
@@ -40,22 +40,24 @@ export default function InputPrompt({ onSubmit, onBack, chatTitle, isTyping }) {
         h(Box, { height: 1 },
             isTyping
                 ? h(TypingDots)
-                : h(Text, { color: nameColor, bold: true }, chatTitle ? `  ${chatTitle}` : "  ")
+                : h(Text, { color: nameColor, bold: true }, chatTitle ? ` ${chatTitle}` : " ")
         ),
         // Top divider
         h(Text, { color: color }, divider),
         // Input row
-        h(Box, null,
+        h(Box, { width: cols },
             h(Text, { color }, " ❯ "),
-            h(TextInput, {
-                value,
-                onChange: setValue,
-                onSubmit: (val) => {
-                    if (val.trim()) onSubmit(val.trim());
-                    setValue("");
-                },
-                placeholder: value ? placeholder : ` ${placeholder}`
-            })
+            h(Box, { flexGrow: 1, flexShrink: 1, paddingRight: 2 },
+                h(TextInput, {
+                    value,
+                    onChange: setValue,
+                    onSubmit: (val) => {
+                        if (val.trim()) onSubmit(val.trim());
+                        setValue("");
+                    },
+                    placeholder: value ? placeholder : ` ${placeholder}`
+                })
+            )
         ),
         // Bottom divider
         h(Text, { color: color }, divider),

@@ -60,6 +60,7 @@ Navigating and interacting with Termigram relies on standard CLI inputs.
 - `↑` / `↓` - Navigate menus and lists.
 - `Return` / `Enter` - Select a chat to open.
 - `esc` - Go back to the previous screen.
+- `L` - Log out of your Telegram account (from non-chat screens).
 - `q` - Quit the application (from non-chat screens).
 
 ### Chat Commands
@@ -67,6 +68,7 @@ While inside a conversation, you can use the following commands by typing them d
 
 - `/history <n>` - Adjust the loaded chat history (default is 20 messages). Example: `/history 50`.
 - `/back` - Return to the chat menu (alias for `esc`).
+- `/logout` - Log out of your Telegram account and clear local session secrets.
 - `/quit` or `/exit` - Close the connection, clear the terminal, and exit Termigram.
 
 ### Menu Commands
@@ -81,13 +83,13 @@ Termigram is actively under development! While the core sending/receiving founda
 
 ### Priority 1 (Core Foundations)
 - [ ] **Read Receipts (`Mark as Read`)**: The app currently does not signal to Telegram servers that messages were viewed. This must be implemented so chats sync as "read" accurately.
-- [ ] **Message History Pagination**: Infinite scroll upwards! Right now, you are locked to the most recent 20 messages. A mechanism needs to be added (e.g. `Ctrl+U`) to natively load the previous page of history.
+- [ ] **Message Formatting & Replies**: Add a visual indentation block quoting the message being replied to, and natively parse/render Telegram Markdown (bold, italic, code blocks).
+- [ ] **Media Indicators**: Basic fallback string replacements indicating when an Image, GIF, Voice Note, or File was sent in the chat history.
 - [ ] **Global User Search**: Ability to construct a new chat by looking up a username or phone number from your official contacts book, not just people in your recent history.
 
-### Priority 2 (Rich Messaging)
+### Priority 2 (Rich Messaging & Ergonomics)
+- [ ] **Message History Pagination**: Infinite scroll upwards! Add a mechanism (e.g. `Ctrl+U`) to natively load the previous page of history.
 - [ ] **Group Chat Senders**: Within group chats, visually delineate different senders' names instead of rolling them all under the thread name.
-- [ ] **Reply Formatting**: Add a visual indentation block quoting the message being replied to.
-- [ ] **Media Indicators**: Basic fallback string replacements indicating when an Image, GIF, Voice Note, or File was sent in the chat history.
 
 ### Priority 3 (Ergonomics)
 - [ ] Multiple Account Support / Profile Switching

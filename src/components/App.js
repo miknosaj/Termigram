@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Text, Box, useApp, useInput } from "ink";
-import Banner from "./Banner.js";
-import PinnedChats from "./PinnedChats.js";
-import BrowseChats from "./BrowseChats.js";
+import Dashboard from "./Dashboard.js";
 import ChatView from "./ChatView.js";
 import * as tg from "../telegram.js";
 
@@ -51,7 +49,7 @@ export default function App() {
 
                 const pinned = await tg.getPinnedChats();
                 setPinnedChats(pinned);
-                setScreen(pinned.length > 0 ? "menu" : "browse");
+                setScreen("dashboard");
             } catch (err) {
                 setError(err.message);
             }
@@ -79,7 +77,7 @@ export default function App() {
         setCurrentChat(null);
         setMessages([]);
         process.stdout.write(`\x1b]0;Termigram\x07`);
-        setScreen("menu");
+        setScreen("dashboard");
     };
 
     // ─── Handle commands ─────────────────────────────────────────────
@@ -105,6 +103,10 @@ export default function App() {
                     await tg.disconnect();
                     app.exit();
                     break;
+                case "/logout":
+                    await tg.logout();
+                    app.exit();
+                    break;
             }
         } catch (err) {
             setError(`Command failed: ${err.message}`);
@@ -113,6 +115,12 @@ export default function App() {
 
     // ─── Ctrl+C / q to quit from non-chat screens ───────────────────
     useInput((input, key) => {
+        if (input.toLowerCase() === "l" && screen !== "chat") {
+            tg.logout().then(() => {
+                app.exit();
+            });
+            return;
+        }
         if (input === "q" && screen !== "chat") {
             tg.disconnect().then(() => {
                 app.exit();
@@ -126,46 +134,34 @@ export default function App() {
     }
 
     if (screen === "loading") {
-        return h(Box, { flexDirection: "column" },
-            h(Banner, { phone: "connecting..." }),
-            h(Text, { color: "#1c64f2" }, "  ⏳ Connecting to Telegram...")
-        );
+        return h(Text, { color: "#00b0ff" }, "  ⏳ Connecting to Telegram...");
     }
 
-    if (screen === "menu") {
-        return h(Box, { flexDirection: "column" },
-            h(Banner, { phone }),
-            pinnedChats.length > 0
-                ? h(PinnedChats, {
-                    chats: pinnedChats,
-                    onSelect: openChat,
-                    onBrowse: () => setScreen("browse")
-                })
-                : null
-        );
+    if (screen === "dashboard") {
+        return h(Dashboard, {
+            phone,
+            pinnedChats,
+            onSelect: openChat,
+            onBack: () => {
+                // If they press escape on the main dashboard, optionally prompt exit or ignore
+                // We're leaving Q/L for logout/quit
+            }
+        });
     }
 
     if (screen === "chat") {
+        const isGroup = currentChat.entity &&
+            (currentChat.entity.className === "Chat" || currentChat.entity.className === "Channel");
+
         return h(ChatView, {
             title: currentChat.title,
             messages,
             isTyping,
+            isGroup,
             onSend: handleSend,
             onCommand: handleCommand,
             onBack: goBack,
         });
-    }
-
-    if (screen === "browse") {
-        return h(Box, { flexDirection: "column" },
-            h(Banner, { phone }),
-            h(BrowseChats, {
-                onSelect: openChat,
-                onBack: () => {
-                    if (pinnedChats.length > 0) setScreen("menu");
-                }
-            })
-        );
     }
 
     return null;

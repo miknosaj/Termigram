@@ -23,22 +23,31 @@ export default function PinnedChats({ chats, onSelect, onBrowse }) {
         }
     });
 
-    return h(Box, { flexDirection: "column", marginTop: 1 },
-        h(Text, { bold: true }, "  📌 Pinned Chats — jump in:"),
-        h(Text, { color: "gray" }, "  ────────────────────────────────────────"),
+    return h(Box, {
+        flexDirection: "column",
+        borderStyle: "round",
+        borderColor: "gray",
+        paddingX: 2,
+        paddingY: 1,
+        marginTop: 1,
+        marginLeft: 2,
+        width: 50
+    },
+        h(Text, { bold: true, marginBottom: 1 }, "📌 Pinned Chats — jump in:"),
         ...items.map((item, i) => {
             const isSelected = i === selected;
-            const pointer = isSelected ? "  ❯ " : "    ";
+            const pointer = isSelected ? "❯ " : "  ";
             const label = item.title;
 
-            return h(Box, { key: i },
-                h(Text, { color: isSelected ? "#00b0ff" : undefined },
+            return h(Box, { key: i, paddingLeft: 2 },
+                h(Text, { color: isSelected ? "#1c64f2" : undefined },
                     pointer,
                     h(Text, { bold: true }, label)
                 )
             );
         }),
-        h(Text, { color: "gray" }, "  ────────────────────────────────────────"),
-        h(Text, { color: "gray" }, "  ↑↓ navigate  ⏎ select")
+        h(Box, { marginTop: 1, paddingLeft: 2 },
+            h(Text, { color: "gray" }, "↑↓ navigate  ⏎ select")
+        )
     );
 }

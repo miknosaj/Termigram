@@ -55,26 +55,35 @@ export default function BrowseChats({ onSelect, onBack }) {
         return h(Text, { color: "gray" }, "  No chats found.");
     }
 
-    return h(Box, { flexDirection: "column", marginTop: 1 },
-        h(Text, { bold: true }, "  💬 All Chats:"),
-        h(Text, { color: "gray" }, "  ────────────────────────────────────────"),
-        offset > 0 ? h(Text, { color: "gray" }, "    ↑ Scroll up for more...") : null,
+    return h(Box, {
+        flexDirection: "column",
+        borderStyle: "round",
+        borderColor: "gray",
+        paddingX: 2,
+        paddingY: 1,
+        marginTop: 1,
+        marginLeft: 2,
+        width: 50
+    },
+        h(Text, { bold: true, marginBottom: 1 }, "💬 All Chats:"),
+        offset > 0 ? h(Box, { paddingLeft: 2 }, h(Text, { color: "gray" }, "↑ Scroll up for more...")) : null,
         ...chats.slice(offset, offset + 10).map((chat, i) => {
             const actualIndex = offset + i;
             const isSelected = actualIndex === selected;
-            const pointer = isSelected ? "  ❯ " : "    ";
+            const pointer = isSelected ? "❯ " : "  ";
             const label = chat.title;
 
-            return h(Box, { key: actualIndex },
-                h(Text, { color: isSelected ? "#00b0ff" : undefined },
+            return h(Box, { key: actualIndex, paddingLeft: 2 },
+                h(Text, { color: isSelected ? "#1c64f2" : undefined },
                     pointer,
                     h(Text, { bold: true }, label),
                     chat.unreadCount > 0 ? h(Text, { color: "#00E676" }, ` (${chat.unreadCount})`) : null
                 )
             );
         }),
-        chats.length > offset + 10 ? h(Text, { color: "gray" }, "    ↓ Scroll down for more...") : null,
-        h(Text, { color: "gray" }, "  ────────────────────────────────────────"),
-        h(Text, { color: "gray" }, "  ↑↓ navigate  ⏎ select  esc back")
+        chats.length > offset + 10 ? h(Box, { paddingLeft: 2 }, h(Text, { color: "gray" }, "↓ Scroll down for more...")) : null,
+        h(Box, { marginTop: 1, paddingLeft: 2 },
+            h(Text, { color: "gray" }, "↑↓ navigate  ⏎ select  esc back")
+        )
     );
 }

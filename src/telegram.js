@@ -1,5 +1,5 @@
 import { loadConfig, saveEnv } from "./config.js";
-import { TelegramClient } from "telegram";
+import { TelegramClient, Api } from "telegram";
 import { StringSession } from "telegram/sessions/index.js";
 import { NewMessage } from "telegram/events/index.js";
 import input from "input";
@@ -75,13 +75,7 @@ export async function getDialogs(limit = 20) {
 export async function getHistory(entity, limit = 20) {
     const messages = [];
     for await (const msg of client.iterMessages(entity, { limit })) {
-        const senderName = await getSenderName(msg);
-        messages.push({
-            text: msg.text || "",
-            date: msg.date,
-            senderName,
-            isSelf: msg.out === true,
-        });
+        messages.push(await parseMessage(msg));
     }
     return messages.reverse();
 }
@@ -94,15 +88,13 @@ export function onNewMessage(callback) {
     client.addEventHandler(async (event) => {
         try {
             const message = event.message;
-            if (!message || !message.text) return;
+            if (!message) return;
 
-            const senderName = await getSenderName(message);
+            const parsed = await parseMessage(message);
+            // Include chatId specific to the onNewMessage callback
             callback({
                 chatId: message.chatId?.toString(),
-                text: message.text,
-                date: message.date,
-                senderName,
-                isSelf: message.out === true,
+                ...parsed,
             });
         } catch {
             // silently ignore
@@ -143,7 +135,68 @@ export async function disconnect() {
     if (client) await client.disconnect();
 }
 
+export async function logout() {
+    if (client) {
+        try {
+            await client.invoke(new Api.auth.LogOut());
+        } catch (e) {
+            // Ignore if already logged out
+        }
+        await client.disconnect();
+    }
+    saveEnv({ SESSION_STRING: "" });
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
+
+async function parseMessage(msg) {
+    const senderName = await getSenderName(msg);
+    let text = msg.text || "";
+
+    // Media Fallbacks
+    if (!text && msg.media) {
+        if (msg.media.className === "MessageMediaPhoto") {
+            text = "[📷 Photo]";
+        } else if (msg.media.className === "MessageMediaDocument") {
+            const attrs = msg.media.document?.attributes || [];
+            const isVoice = attrs.some(a => a.className === "DocumentAttributeAudio" && a.voice);
+            const isVideo = attrs.some(a => a.className === "DocumentAttributeVideo");
+            const isSticker = attrs.some(a => a.className === "DocumentAttributeStickers" || a.className === "DocumentAttributeSticker");
+
+            if (isVoice) text = "[🎤 Voice Message]";
+            else if (isVideo) text = "[📹 Video]";
+            else if (isSticker) text = "[📎 Sticker]";
+            else text = "[📎 Document]";
+        } else {
+            text = `[📎 Media]`;
+        }
+    }
+
+    // Reply Metadata
+    let replyTo = null;
+    if (msg.replyTo) {
+        try {
+            const replyMsg = await msg.getReplyMessage();
+            if (replyMsg) {
+                const replySender = await getSenderName(replyMsg);
+                let replyText = replyMsg.text || "[Media]";
+                if (replyText.length > 40) replyText = replyText.substring(0, 40) + "...";
+                replyTo = { sender: replySender, text: replyText };
+            }
+        } catch (e) {
+            // Ignore if we can't fetch reply
+        }
+    }
+
+    return {
+        id: msg.id,
+        text,
+        date: msg.date,
+        senderName,
+        isSelf: msg.out === true,
+        replyTo,
+    };
+}
 
 async function getSenderName(message) {
     try {
@@ -159,3 +212,4 @@ async function getSenderName(message) {
         return "Unknown";
     }
 }
+
