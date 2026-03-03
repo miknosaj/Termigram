@@ -130,11 +130,11 @@ export default function App() {
 
     // ─── Render ──────────────────────────────────────────────────────
     if (error) {
-        return h(Text, { color: "red" }, "  ✖  Error: ", error);
+        return h(Text, { color: "red" }, "  ✕  Error: ", error);
     }
 
     if (screen === "loading") {
-        return h(Text, { color: "#00b0ff" }, "  ⏳ Connecting to Telegram...");
+        return h(Text, { color: "#00b0ff" }, "  ○ Connecting to Telegram...");
     }
 
     if (screen === "dashboard") {

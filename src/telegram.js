@@ -156,19 +156,19 @@ async function parseMessage(msg) {
     // Media Fallbacks
     if (!text && msg.media) {
         if (msg.media.className === "MessageMediaPhoto") {
-            text = "[📷 Photo]";
+            text = "[▣ Photo]";
         } else if (msg.media.className === "MessageMediaDocument") {
             const attrs = msg.media.document?.attributes || [];
             const isVoice = attrs.some(a => a.className === "DocumentAttributeAudio" && a.voice);
             const isVideo = attrs.some(a => a.className === "DocumentAttributeVideo");
             const isSticker = attrs.some(a => a.className === "DocumentAttributeStickers" || a.className === "DocumentAttributeSticker");
 
-            if (isVoice) text = "[🎤 Voice Message]";
-            else if (isVideo) text = "[📹 Video]";
-            else if (isSticker) text = "[📎 Sticker]";
-            else text = "[📎 Document]";
+            if (isVoice) text = "[◉ Voice]";
+            else if (isVideo) text = "[▶ Video]";
+            else if (isSticker) text = "[◈ Sticker]";
+            else text = "[▤ Document]";
         } else {
-            text = `[📎 Media]`;
+            text = `[◆ Media]`;
         }
     }
 

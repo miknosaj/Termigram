@@ -65,7 +65,7 @@ export default function BrowseChats({ onSelect, onBack }) {
         marginLeft: 2,
         width: 50
     },
-        h(Text, { bold: true, marginBottom: 1 }, "💬 All Chats:"),
+        h(Text, { bold: true, marginBottom: 1 }, "All Chats:"),
         offset > 0 ? h(Box, { paddingLeft: 2 }, h(Text, { color: "gray" }, "↑ Scroll up for more...")) : null,
         ...chats.slice(offset, offset + 10).map((chat, i) => {
             const actualIndex = offset + i;

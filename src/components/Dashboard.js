@@ -139,13 +139,14 @@ export default function Dashboard({ phone, pinnedChats, onSelect, onBack }) {
                 const isPinned = pinnedChats.find(p => p.id === chat.id);
 
                 const pointer = isSelected ? "❯ " : "  ";
-                const pinIcon = isPinned ? "📌 " : "   ";
+                const isDirectMessage = chat.entity?.className === "User";
+                const chatIcon = isPinned ? "◆ " : isDirectMessage ? "● " : "  ";
                 const label = chat.title;
 
                 return h(Box, { key: actualIndex },
                     h(Text, { color: isSelected ? "#00b0ff" : undefined },
                         pointer,
-                        h(Text, { dimColor: !isPinned && !isSelected }, pinIcon),
+                        chatIcon,
                         h(Text, { bold: isSelected || isPinned }, label),
                         chat.unreadCount > 0 ? h(Text, { color: "#00E676" }, ` (${chat.unreadCount})`) : null
                     )

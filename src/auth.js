@@ -19,9 +19,9 @@ export async function authenticate({ apiId, apiHash, sessionString }) {
     client.setLogLevel("error");
 
     await client.start({
-        phoneNumber: async () => await input.text("📱 Enter your phone number (with country code):"),
-        phoneCode: async () => await input.text("💬 Enter the code you received:"),
-        password: async () => await input.text("🔐 Enter your 2FA password:"),
+        phoneNumber: async () => await input.text("→ Enter your phone number (with country code):"),
+        phoneCode: async () => await input.text("→ Enter the code you received:"),
+        password: async () => await input.text("→ Enter your 2FA password:"),
         onError: (err) => {
             printError(`Auth error: ${err.message}`);
         },

@@ -33,7 +33,7 @@ export default function PinnedChats({ chats, onSelect, onBrowse }) {
         marginLeft: 2,
         width: 50
     },
-        h(Text, { bold: true, marginBottom: 1 }, "📌 Pinned Chats — jump in:"),
+        h(Text, { bold: true, marginBottom: 1 }, "◆ Pinned Chats — jump in:"),
         ...items.map((item, i) => {
             const isSelected = i === selected;
             const pointer = isSelected ? "❯ " : "  ";
