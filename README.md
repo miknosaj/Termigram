@@ -1,6 +1,6 @@
 # Termigram
 
-A Telegram client for the terminal that's only slightly less uggo. Built with [Ink](https://github.com/vadimdemedes/ink) and [GramJS](https://github.com/nicedoc/gramjs).
+A Telegram client for the terminal that's only slightly less uggo. Built with [Ink](https://github.com/vadimdemedes/ink) and [GramJS](https://github.com/gram-js/gramjs).
 
 ## Install
 
