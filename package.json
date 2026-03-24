@@ -1,0 +1,50 @@
+{
+  "name": "termigram",
+  "version": "0.1.0",
+  "description": "Telegram client for the terminal",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "termigram": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "telegram",
+    "terminal",
+    "cli",
+    "tui",
+    "chat",
+    "ink",
+    "gramjs"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/miknosaj/Termigram"
+  },
+  "author": "Jason Kim",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "ink": "^6.8.0",
+    "ink-link": "^5.0.0",
+    "react": "^19.2.4",
+    "telegram": "^2.26.16"
+  },
+  "files": [
+    "index.js",
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.1.0",
+    "vitest": "^4.1.1"
+  }
+}
